@@ -1,20 +1,49 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendCors", policy =>
+    {
+        var origins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+            ?? Array.Empty<string>();
+
+        if (origins.Length == 0 || origins.Contains("*"))
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+        else
+        {
+            policy.WithOrigins(origins)
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+    });
+});
+
+builder.Services.AddScoped<FestivalCine.Database.IDbConnectionFactory, FestivalCine.Database.SqlConnectionFactory>();
+builder.Services.AddScoped<FestivalCine.Services.ITaquillaService, FestivalCine.Services.TaquillaService>();
+builder.Services.AddScoped<FestivalCine.Services.IAgendaService, FestivalCine.Services.AgendaService>();
+builder.Services.AddScoped<FestivalCine.Services.IReportesService, FestivalCine.Services.ReportesService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+app.UseMiddleware<FestivalCine.Common.SqlExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
+
+app.UseCors("FrontendCors");
 
 app.UseAuthorization();
 
