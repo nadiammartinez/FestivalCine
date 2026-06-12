@@ -32,6 +32,16 @@ public sealed class SqlExceptionHandlingMiddleware
             var response = ApiResponse<object>.Fail(GetCleanSqlMessage(ex));
             await context.Response.WriteAsJsonAsync(response);
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogWarning(ex, "Intento de acceso no autorizado.");
+
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            context.Response.ContentType = "application/json";
+
+            var response = ApiResponse<object>.Fail(ex.Message);
+            await context.Response.WriteAsJsonAsync(response);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error inesperado en la API.");

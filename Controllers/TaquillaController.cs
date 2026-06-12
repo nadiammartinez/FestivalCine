@@ -3,6 +3,7 @@ using FestivalCine.DTOs.Requests;
 using FestivalCine.DTOs.Responses;
 using FestivalCine.DTOs.Views;
 using FestivalCine.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FestivalCine.Controllers;
@@ -19,6 +20,7 @@ public sealed class TaquillaController : ControllerBase
     }
 
     [HttpGet("peliculas")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<PeliculaCatalogoDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<PeliculaCatalogoDto>>>> ListarPeliculas()
     {
@@ -27,6 +29,7 @@ public sealed class TaquillaController : ControllerBase
     }
 
     [HttpGet("cartelera")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<ProyeccionCarteleraDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<ProyeccionCarteleraDto>>>> ListarCartelera()
     {
@@ -35,6 +38,7 @@ public sealed class TaquillaController : ControllerBase
     }
 
     [HttpGet("peliculas/{idPelicula}/proyecciones-disponibles")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<ProyeccionCarteleraDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<ProyeccionCarteleraDto>>>> ListarProyeccionesDisponibles(string idPelicula)
     {
@@ -43,6 +47,7 @@ public sealed class TaquillaController : ControllerBase
     }
 
     [HttpGet("eventos")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<EventoParaleloDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<EventoParaleloDto>>>> ListarEventos()
     {
@@ -51,6 +56,7 @@ public sealed class TaquillaController : ControllerBase
     }
 
     [HttpGet("recaudacion")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<RecaudacionVentaDto>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<RecaudacionVentaDto>>>> ObtenerRecaudacion()
     {
@@ -59,6 +65,7 @@ public sealed class TaquillaController : ControllerBase
     }
 
     [HttpPost("entradas")]
+    [Authorize(Roles = "Admin,Taquilla")]
     [ProducesResponseType(typeof(ApiResponse<CompraEntradaResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ApiResponse<CompraEntradaResponse>>> ComprarEntrada(ComprarEntradaRequest request)
@@ -68,6 +75,7 @@ public sealed class TaquillaController : ControllerBase
     }
 
     [HttpPost("entradas-evento")]
+    [Authorize(Roles = "Admin,Taquilla")]
     [ProducesResponseType(typeof(ApiResponse<CompraEntradaResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ApiResponse<CompraEntradaResponse>>> ComprarEntradaEvento(ComprarEntradaEventoRequest request)
@@ -77,6 +85,7 @@ public sealed class TaquillaController : ControllerBase
     }
 
     [HttpPost("abonos")]
+    [Authorize(Roles = "Admin,Taquilla")]
     [ProducesResponseType(typeof(ApiResponse<VenderAbonoResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ApiResponse<VenderAbonoResponse>>> VenderAbono(VenderAbonoRequest request)

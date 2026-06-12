@@ -1,11 +1,13 @@
 using FestivalCine.Common;
 using FestivalCine.DTOs.Views;
 using FestivalCine.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FestivalCine.Controllers;
 
 [ApiController]
+[Authorize(Roles = "Admin")]
 [Route("api/[controller]")]
 public sealed class ReportesController : ControllerBase
 {
