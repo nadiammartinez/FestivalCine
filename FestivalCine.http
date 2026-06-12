@@ -1,0 +1,6 @@
+@FestivalCine_HostAddress = http://localhost:5036
+
+GET {{FestivalCine_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
