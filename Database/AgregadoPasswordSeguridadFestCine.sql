@@ -1,22 +1,22 @@
-USE FestCineSantaCruzDB;
-GO
-
-CREATE OR ALTER PROCEDURE dbo.CambiarPasswordUsuarioSistema
-    @IdUsuario CHAR(5),
-    @PasswordHash VARCHAR(255)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    IF NOT EXISTS (SELECT 1 FROM UsuarioSistema WHERE IdUsuario = @IdUsuario)
-        RAISERROR('El usuario no existe.', 16, 1);
-
-    UPDATE UsuarioSistema
-    SET PasswordHash = @PasswordHash
-    WHERE IdUsuario = @IdUsuario;
-
-    SELECT
-        'Password actualizado correctamente' AS Mensaje,
-        @IdUsuario AS IdUsuario;
-END;
-GO
+-- USE FestCineSantaCruzDB;
+-- GO
+-- 
+-- CREATE OR ALTER PROCEDURE dbo.CambiarPasswordUsuarioSistema
+--     @IdUsuario CHAR(5),
+--     @PasswordHash VARCHAR(255)
+-- AS
+-- BEGIN
+--     SET NOCOUNT ON;
+-- 
+--     IF NOT EXISTS (SELECT 1 FROM UsuarioSistema WHERE IdUsuario = @IdUsuario)
+--         RAISERROR('El usuario no existe.', 16, 1);
+-- 
+--     UPDATE UsuarioSistema
+--     SET PasswordHash = @PasswordHash
+--     WHERE IdUsuario = @IdUsuario;
+-- 
+--     SELECT
+--         'Password actualizado correctamente' AS Mensaje,
+--         @IdUsuario AS IdUsuario;
+-- END;
+-- GO
